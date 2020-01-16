@@ -2,7 +2,7 @@ import React from 'react'
 import {connect } from 'react-redux';
 import {fetchPosts } from '../actions'
 
-class PostList extends React.component {
+class PostList extends React.Component {
     componentDidMount(){
         this.props.fetchPosts();
     }
@@ -10,9 +10,7 @@ class PostList extends React.component {
         return (<div>PostList</div>)
     }
 }
-const mapStateToProps =(state)=>{
 
-}
 
 
 export default  connect(null, {fetchPosts:fetchPosts})(PostList);
