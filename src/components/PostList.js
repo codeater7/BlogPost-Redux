@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchPosts } from '../actions';
+import UserHeader from './UserHeader'
 
 class PostList extends React.Component {
 	componentDidMount() {
-		this.props.fetchPosts();
+        this.props.fetchPosts()
+        
 	}
 	renderList() {
 		return this.props.posts.map(post => {
@@ -16,15 +18,16 @@ class PostList extends React.Component {
 							<h2>{post.title}</h2>
 							<p>{post.body}</p>
 						</div>
+                        <UserHeader userId = {post.userId} />
 					</div>
 				</div>
 			);
 		});
 	}
-	// mathi ko post.title ra body is from api
+	//mathi ko post.title ra body is from api
 	render() {
-		console.log(this.props.fetchPosts());
-		return <div className="ui relaxed divided list">{} </div>;
+		console.log(this.props.posts)
+		return <div className="ui relaxed divided list">{this.renderList()} </div>;
 	}
 }
 //this state will hold posts that our reducer has returned

@@ -1,5 +1,27 @@
 import jsonPlaceholder from '../apis/jsonplaceholder'
 
+export const fetchPosts= () => async (dispatch, getState)=> {
+   
+    const response=  await jsonPlaceholder.get('/posts')
+    console.log(response)
+    dispatch({
+        type:"FETCH_POSTS", 
+        payload: response.data
+    })
+
+
+    }
+    export const fetchUser= (id) => async (dispatch, getState)=> {
+   
+        const response=  await jsonPlaceholder.get(`/users:$id`)
+        
+        dispatch({
+            type:"FETCH_USER", 
+            payload: response.data
+        })
+    }
+
+
 
 //With Redux-thunk we can use async await
 // We are defining function that is returning a function
@@ -13,15 +35,7 @@ import jsonPlaceholder from '../apis/jsonplaceholder'
 //     }
 // } 
 
-export const fetchPosts= () => async (dispatch, getState)=> {
-   
-     const response=  await jsonPlaceholder.get('/posts')
-     console.log(response)
-     dispatch({type:'FETCH_POSTS', payload: response.data})
- 
- 
-     }
- 
+
 
 
 
