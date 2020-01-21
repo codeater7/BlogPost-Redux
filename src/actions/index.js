@@ -1,26 +1,68 @@
+import _ from 'lodash'
 import jsonPlaceholder from '../apis/jsonplaceholder'
 
-export const fetchPosts= () => async (dispatch, getState)=> {
-   
-    const response=  await jsonPlaceholder.get('/posts')
-    console.log(response)
-    dispatch({
-        type:"FETCH_POSTS", 
-        payload: response.data
-    })
+export const fetchPostAndUsers= ()=> async (dispatch, getState) =>{
+    // only action creator
+    
+    await dispatch(fetchPosts())
+    //pulls off userId property 
+    const userIds= _.uniq(_.map(getState().posts, "userId"))
+    
+    //just the uniqe id _.uniq
+    // iterate over list of ids and for every id we need to call fetuser action creator
+    userIds.forEach(id=> dispatch(fetchUser(id)))
 
-
-    }
-    export const fetchUser= (id) => async (dispatch, getState)=> {
-   
-        const response=  await jsonPlaceholder.get(`/users:$id`)
+    // minimizing
+    // _.chain(getState().posts)
+    //     .map('userId')
+    //     .uniq()
+    //     .forEach(id=>dispatch(fetchUser(id)))  
+    //     .value() //  means just execute the following
         
+        
+    // if using other
+    // await Promise.all(userIds.map(id=>dispatch(fetchUser(id))))
+
+}
+
+export const fetchPosts= () => async (dispatch, getState)=> {
+   const response=  await jsonPlaceholder.get('/posts')
+    console.log(response)
+    dispatch({ type:"FETCH_POSTS", payload: response.data})
+}
+//function that returns the function, that returns the function, that calls _fetchUser with (id and dispatch)
+// export const fetchUser= (id) =>  (dispatch, getState)=> _fetchUser(id, dispatch)
+    
+
+    // Private function
+// const _fetchUser= _.memoize(async (id, dispatch)=> {
+//     const response= await jsonPlaceholder.get(`/users/${id}`)
+        
+//         dispatch({
+//             type:"FETCH_USER", 
+//             payload: response.data
+//         })
+// })
+//2nd way 
+export const fetchUser= (id) => async (dispatch,getState) => {
+    const response= await jsonPlaceholder.get(`/users/${id}`)
         dispatch({
             type:"FETCH_USER", 
             payload: response.data
         })
-    }
+}
+// with  memoization we can fetch one user only one time
+// export const fetchUser= function(id){
+//     return  _.memoize(async function (dispatch, getState) {
+//         const response=  await jsonPlaceholder.get(`/users/${id}`);
+        
+//         dispatch({ type:"FETCH_USER", payload: response.data})
+//     });
+// }
+// Everytime we are calling memoize, new verson of function we are call action creator
+//internal is being invoked
 
+// SO we have to define function outside of action creator that is going is make request once time
 
 
 //With Redux-thunk we can use async await
@@ -87,4 +129,4 @@ export const fetchPosts= () => async (dispatch, getState)=> {
 
 // With Redux thunk we get the ability to return the function as well. Inside of inner function no need to return an action. 
 // Instead, we call the dispatch function with the action, we are going to call . 
-//  Just call the dispatch with the action object
+// Just call the dispatch with the action 
